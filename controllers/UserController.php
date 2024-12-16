@@ -37,4 +37,12 @@ class UserController {
             echo "Nombre de usuario o contraseña incorrectos";
         }
     }
+
+    public function handleDelete($id) {
+        $this->userModel->id = $id;
+
+        if ($this->userModel->delete($id)) {
+            echo 
+        }
+    }
 }

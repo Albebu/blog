@@ -47,7 +47,10 @@ class User {
 
         $stmt = $this->conn->prepare($query);
 
+        // hace falta en id ?
+        $this->id = htmlspecialchars(strip_tags($this->id));
         $this->username = htmlspecialchars(strip_tags($this->username));
+        
         $stmt->bindParam(':username', $this->username);
 
         $stmt->execute();
@@ -59,6 +62,22 @@ class User {
                 $this->id = $row['id'];
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    public function delete() {
+        $query = "DELETE FROM $this->table_name WHERE $this->id = id";
+
+        $stmt = $this->conn->prepare($query);
+
+        $this->id = htmlspecialchars(strip_tags($this->id));
+
+        $stmt->bindParam(":id", $this->id);
+
+        if ($stmt->execute()) {
+            return true;
         }
 
         return false;
