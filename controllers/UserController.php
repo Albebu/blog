@@ -31,11 +31,20 @@ class UserController {
             session_start();
             $_SESSION['user_id'] = $this->userModel->id;
             $_SESSION['username'] = $this->userModel->username;
+            $_SESSION['role'] = $this->userModel->role;
 
             echo "Inicio de sesión exitoso";
         } else {
             echo "Nombre de usuario o contraseña incorrectos";
         }
+    }
+
+    public function handleLogout() {
+        session_unset();
+        session_destroy();
+
+        echo "Cierre de sesión exitoso";
+        exit;
     }
 
     public function handleDelete($id) {

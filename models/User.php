@@ -12,6 +12,7 @@ class User {
     public $username;
     public $email;
     public $password;
+    public $role;
 
     public function __construct($db) {
         $this->conn = $db;
@@ -43,7 +44,7 @@ class User {
     }
 
     public function login() {
-        $query = "SELECT id, username, password FROM " . $this->table_name . " WHERE username = :username";
+        $query = "SELECT id, username, password, role FROM " . $this->table_name . " WHERE username = :username";
 
         $stmt = $this->conn->prepare($query);
 
@@ -60,6 +61,8 @@ class User {
 
             if (password_verify($this->password, $row['password'])) {
                 $this->id = $row['id'];
+                $this->username = $row['username'];
+                $this->role = $row['role'];
                 return true;
             }
         }

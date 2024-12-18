@@ -1,4 +1,5 @@
 <?php
+// filepath: /path/to/login.php
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../controllers/UserController.php';
@@ -7,16 +8,23 @@ use config\Database;
 use models\User;
 use controllers\UserController;
 
-$db = (new Database())->getConnection();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $db = (new Database())->getConnection();
 
-$user = new User($db);
-$userController = new UserController($user);
+    $user = new User($db);
+    $userController = new UserController($user);
 
-$username = $_POST['username'];
-$password = $_POST['password'];
+    $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
+    $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
 
-$userController->handleLogin($username, $password);
-
+    if ($userController->handleLogin($username, $password)) {
+        // Redirigir al usuario a la página de inicio o dashboard
+        header('Location: dashboard.php');
+        exit;
+    } else {
+        $error = "Nombre de usuario o contraseña incorrectos.";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -26,6 +34,9 @@ $userController->handleLogin($username, $password);
 </head>
 <body>
     <h1>Login</h1>
+    <?php if (isset($error)): ?>
+        <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>
+    <?php endif; ?>
     <form method="post" action="login.php">
         <label for="username">Username:</label>
         <input type="text" name="username" required><br>
