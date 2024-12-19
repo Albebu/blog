@@ -1,11 +1,13 @@
 <?php
-require_once __DIR__ . '/../config/Database.php';
-require_once __DIR__ . '/../models/User.php';
-require_once __DIR__ . '/../controllers/UserController.php';
+require_once __DIR__ . '/../../config/Database.php';
+require_once __DIR__ . '/../../models/User.php';
+require_once __DIR__ . '/../../controllers/UserController.php';
 
 use config\Database;
 use models\User;
 use controllers\UserController;
+
+session_start(); // Asegúrate de que la sesión esté iniciada
 
 $db = (new Database())->getConnection();
 
@@ -14,7 +16,7 @@ $userController = new UserController($user);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
     $userController->handleLogout();
-    header('Location: index.php');
+    header('Location: /blog/index.php');
     exit();
 }
 

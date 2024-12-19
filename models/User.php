@@ -12,7 +12,7 @@ class User {
     public $username;
     public $email;
     public $password;
-    public $role;
+    public $role; // Por defecto subscriber
 
     public function __construct($db) {
         $this->conn = $db;
@@ -30,10 +30,12 @@ class User {
         $this->email = htmlspecialchars(strip_tags($this->email));
         $this->password = htmlspecialchars(strip_tags($this->password));
 
+        $hashed_passwrord = password_hash($this->password, PASSWORD_DEFAULT);
+
         // Bindeamos parámetros y hasheamos la contraseña
         $stmt->bindParam(':username', $this->username);
         $stmt->bindParam(':email', $this->email);
-        $stmt->bindParam(':password', password_hash($this->password, PASSWORD_DEFAULT));
+        $stmt->bindParam(':password', $thid->hashed_password);
 
         // Si la ejecución es exitosa devolvemos true, en caso contrario false
         if ($stmt->execute()) {

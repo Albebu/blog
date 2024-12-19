@@ -1,8 +1,7 @@
 <?php
-// filepath: /path/to/login.php
-require_once __DIR__ . '/../config/Database.php';
-require_once __DIR__ . '/../models/User.php';
-require_once __DIR__ . '/../controllers/UserController.php';
+require_once __DIR__ . '/../../config/Database.php';
+require_once __DIR__ . '/../../models/User.php';
+require_once __DIR__ . '/../../controllers/UserController.php';
 
 use config\Database;
 use models\User;
@@ -19,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($userController->handleLogin($username, $password)) {
         // Redirigir al usuario a la página de inicio o dashboard
-        header('Location: dashboard.php');
+        header('Location: /blog/index.php');
         exit;
     } else {
         $error = "Nombre de usuario o contraseña incorrectos.";

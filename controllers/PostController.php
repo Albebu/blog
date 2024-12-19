@@ -15,44 +15,14 @@ class PostController {
         $this->postModel->title = $title;
         $this->postModel->body = $body;
 
-        if($this->postModel->create()) {
-            echo "Post creado exitosamente";
+        if ($this->postModel->create()) {
+            return true; // Retorna true si se crea correctamente
         } else {
-            echo "Error al crear el post";
+            throw new Exception("Error al crear el post.");
         }
     }
 
-    public function handleRead() {
-        $stmt = $this->postModel->read();
-
-        if($stmt->rowCount() > 0) {
-            $posts_arr = array();
-
-            while($row = $stmt->fetch()) {
-                $post_item = array(
-                    'id' => $row['id'],
-                    'title' => $row['title'],
-                    'body' => $row['body'],
-                    'created_at' => $row['created_at'],
-                    'modified_at' => $row['modified_at']
-                );
-
-                array_push($posts_arr, $post_item);
-            }
-
-            echo json_encode($posts_arr);
-        } else {
-            echo "No se encontraron posts";
-        }
+    public function handleAllPostRead() {
+        return $this->postModel->read();
     }
-
-    public function handlePostDelete($id) {
-        $this->postModel->id = $id;
-
-        if($this->postModel->delete()) {
-            echo "Post eliminado exitosamente";
-        } else {
-            echo "Error al eliminar el post";
-        }
-    } 
 }

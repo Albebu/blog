@@ -1,32 +1,46 @@
 <?php
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+
+session_start();
+
+$role = $_SESSION['role'];
+
+if (!isset($role)) {
+    header('Location: /blog/views/user/login.php');
     exit;
 }
 
+if ($role != 'writer' || $role != 'admin') {
+    header('Location: /blog/views/user/dashboard.php');
+    exit;
+}
+
+require_once __DIR__ . '/../../config/Database.php';
+require_once __DIR__ . '/../../models/Post.php';
+require_once __DIR__ . '/../../controllers/PostController.php';
+
+use config\Database;
+use models\Post;
+use controllers\PostController;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        
-    require_once __DIR__ . '/../config/Database.php';
-    require_once __DIR__ . '/../models/Post.php';
-    require_once __DIR__ . '/../controllers/PostController.php';
-
-    use config\Database;
-    use models\Post;
-    use controllers\PostController;
-
     $db = (new Database())->getConnection();
 
     $post = new Post($db);
+    $postController = new PostController($post);
 
-    $postController = new PostController($user);
-    $title = $_POST['title'];
-    $body = $_POST['body'];
+    $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
+    $body = filter_input(INPUT_POST, 'body', FILTER_SANITIZE_STRING);
 
-    $postController->handlePostCreation($title, $body);
-    header('Location: index.php');
-    exit;
+    try {
+        $postController->handlePostCreation($title, $body);
+        header('Location: /blog/views/user/dashboard.php');
+        exit;
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage();
+    }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html>

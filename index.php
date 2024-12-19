@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 $role = isset($_SESSION['role']) ? $_SESSION['role'] : null;
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : null;
 ?>
@@ -14,6 +16,7 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : null;
     <h4>Si no tiene una cuenta creela aquí: <a href="/blog/views/user/register.php">Registrarse</a></h4>
     <h4>Si ya tiene una cuenta inicie sesión aquí: <a href="/blog/views/user/login.php">Iniciar sesión</a></h4>
     <h4>Para crear un blog vaya a la siguiente página <a href="/blog/views/post/create.php">Crear blog</a></h4>
-    <h4>Para ver los post mas recientes vaya a <a href="/blog/views/user/dashboard.php">Dashboard</a></h4>
+    <h4>Para cerrar sesión vaya a <a href="/blog/views/user/logout.php">Log out</a></h4>
+    <h4>Para ir al menu principal vaya a <a href="/blog/views/user/dashboard.php">Dashboard</a></h4>
 </body>
 </html>

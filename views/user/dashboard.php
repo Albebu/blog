@@ -1,40 +1,55 @@
 <?php
-if (!isset($_SESSION['user_id'])) {
-    header('Location: ../errors/need-login.php');
-    exit;
-}
-
-require_once __DIR__ . '/../config/Database.php';
-require_once __DIR__ . '/../models/User.php';
-require_once __DIR__ . '/../controllers/UserController.php';
+session_start();
 
 use config\Database;
-use models\Post;
 use controllers\PostController;
-
+use models\Post;
+ 
+require_once '../../config/Database.php';
+require_once '../../models/Post.php';
+require_once '../../controllers/PostController.php';
+ 
+// Instanciar base de datos, modelo y controlador
 $database = new Database();
 $db = $database->getConnection();
+$postModel = new Post($db);
+$postController = new PostController($postModel);
 
-$postController = new PostController($db);
-$posts = json_decode($postController->handleRead(), true);
+$posts = $postController->handleAllPostRead();
 
+
+
+/*
+
+<!-- HTML del Post -->
+<h1>Detalles del Post</h1>
+<h2><?php echo $posts; ?></h2>
+ 
+<!-- Formulario para enviar comentarios -->
+<h3>Deja un comentario</h3>
+<form method="POST">
+    <textarea name="content" rows="4" cols="50" placeholder="Escribe tu comentario aquí"></textarea><br>
+    <button type="submit">Enviar</button>
+</form>
+ 
+<!-- Lista de Comentarios -->
+<h3>Comentarios</h3>
+<?php
+
+<?php if (empty($comments)): ?>
+    <p>No hay comentarios aún.</p>
+<?php else: ?>
+    <ul>
+        <?php foreach ($comments as $comment): ?>
+            <li>
+                <strong><?php echo htmlspecialchars($comment['username']); ?>:</strong>
+                <?php echo htmlspecialchars($comment['content']); ?>
+                <br>
+                <small><?php echo $comment['created_at']; ?></small>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+ 
+*/
 ?>
-
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <div style="background-color: lightblue; width: 300px; height: 300px;">
-        Post 1
-    </div>
-    <?php foreach ($posts as $post) {
-        echo '<div style="background-color: lightblue; width: 300px; height: 300px; margin-bottom: 10px;">';
-        echo '<h2>' . htmlspecialchars($post['title']) . '</h2>';
-        echo '<p>' . htmlspecialchars($post['content']) . '</p>';
-        echo '</div>';
-    }?>
-</body>
-</html>
